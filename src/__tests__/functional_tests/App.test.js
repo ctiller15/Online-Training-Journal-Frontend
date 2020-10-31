@@ -34,8 +34,37 @@ test('upon clicking sign up, redirects to sign up page.', () => {
 
 	fireEvent.click(signUpLink);
 
-	const signUpForm = getByRole('form', {name: /Sign Up/i});
+	const signUpForm = getByRole('form', {name: /signupform/i});
 	expect(signUpForm).toBeInTheDocument();
+});
 
-	throw new Error('Finish the test!');	
+test('after signing up successfully, users are redirected to their dashboard', async () => {
+	const testEmail = "example@example.com";
+	const testPassword = "password";
+
+	const { getByLabelText, findByText } = render(
+		<Provider store={store}>
+			<MemoryRouter
+				initialEntries={['/signup']}
+				initialIndex={1}
+			>
+				<App />
+			</MemoryRouter>
+		</Provider>
+	);
+
+	const emailInput = getByLabelText('Email');
+	const passwordInput = getByLabelText('Password');
+	const passwordConfirm = getByLabelText('Confirm Password');
+
+	fireEvent.change(emailInput, { target: { value: testEmail} })
+	fireEvent.change(passwordInput, { target: { value: testPassword } })
+	fireEvent.change(passwordConfirm, { target: {value: testPassword } });
+
+	// Wait on mock server call.
+
+	const dashboard = await findByText(/Dashboard/i);
+	expect(dashboard).toBeInTheDocument();
+
+	throw new Error('finish the test!');
 });
