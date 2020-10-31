@@ -12,13 +12,42 @@ test('Signup form component renders', () => {
 })
 
 test('if email is not valid, displays validation error', () => {
-	
+	const fakeEmail = "email"
 
+	const { getByLabelText, getByText } = render(
+		<SignupForm />
+	);
 
-	throw new Error('Finish the test!');
+	const emailInput = getByLabelText(/Email/i);
+
+	emailInput.focus()
+	fireEvent.change(emailInput, { target: {value: fakeEmail} })
+	emailInput.blur()
+
+	expect(getByText(/Not a valid email address/i)).toBeInTheDocument();
 });
 
 test('if passwords do match, form gives user affirmation that passwords are correct.', () => {
+	const dummyEmail = "example@example.com"
+	const passwordSubmit = "password"
+
+	const { getByLabelText, getByText } = render(
+		<SignupForm />
+	);
+
+	const emailInput = getByLabelText(/Email/i);
+	emailInput.focus()
+	fireEvent.change(emailInput, { target: {value: dummyEmail} })
+
+	const passwordInput = getByLabelText(/Password/i);
+	passwordInput.focus()
+	fireEvent.change(passwordInput, { target: {value: passwordSubmit}})
+
+	const confirmPasswordInput = getByLabelText(/Confirm Password/i);
+	confirmPasswordInput.focus()
+	fireEvent.change(confirmPasswordInput, { target: {value: passwordSubmit }})
+
+	expect(getByText(/passwords match/i)).toBeInTheDocument();
 	throw new Error('Finish the test!');
 })
 
