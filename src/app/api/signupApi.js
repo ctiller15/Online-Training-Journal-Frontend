@@ -13,3 +13,17 @@ export const signUp = async (payload) => {
 
 	return response;
 }
+
+export const logIn = async (payload) => {
+	const url = `${process.env.REACT_APP_API_URL}/login`;
+
+	let response;
+
+	try {
+		response = await axios.post(url, payload);
+	} catch (err) {
+		response = err;
+	}
+
+	return response
+}

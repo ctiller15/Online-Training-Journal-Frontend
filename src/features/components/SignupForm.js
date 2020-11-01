@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useHistory } from "react-router-dom";
-import { TextField, FormControl, Button } from '@material-ui/core'
+import { TextField, FormControl, Button, Box } from '@material-ui/core'
 import { emailValidator } from '../../app/utils/validationHelpers'
 import { signUp } from '../../app/api/signupApi'
 
@@ -89,8 +89,13 @@ export const SignupForm = (props) => {
 
 	return (
 		<React.Fragment>
-		<span>{messageText}</span>
-		<form aria-label="signupform" onSubmit={handleSubmit}>
+		<Box 
+			component='form' 
+			aria-label="signupform"
+			display="flex"
+			flexDirection="column"
+			onSubmit={handleSubmit}>
+			<span>{messageText}</span>
 			<FormControl>
 				<TextField 
 					error={invalidEmail}
@@ -110,6 +115,7 @@ export const SignupForm = (props) => {
 					variant="outlined"
 					id="password"
 					label="password"
+					type="password"
 					value={password}
 				/>
 			</FormControl>
@@ -122,6 +128,7 @@ export const SignupForm = (props) => {
 					id="passwordconfirm"
 					label="confirm password"
 					value={passwordConf}
+					type="password"
 					helperText={generatePasswordConfirmHelperText()}
 				/>
 			</FormControl>
@@ -130,8 +137,10 @@ export const SignupForm = (props) => {
 				type="submit" 
 				value="Submit" 
 				disabled={!allFieldsSubmitted()}
+				variant="contained"
+				color="primary"
 			>Sign Up</Button>
-		</form>
+		</Box>
 		</React.Fragment>
 	);
 }

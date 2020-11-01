@@ -80,3 +80,61 @@ test('after signing up successfully, users are redirected to their dashboard', a
 	const dashboard = await findByText(/Dashboard/i);
 	expect(dashboard).toBeInTheDocument();
 });
+
+test('upon clicking log in, redirects to login page.', () => {
+	const { getByRole } = render(
+		<Provider store={store}>
+			<MemoryRouter>
+				<App />
+			</MemoryRouter>
+		</Provider>
+	);
+
+	const loginLink = getByRole('link', {name: /Log In/i});
+
+	fireEvent.click(loginLink);
+
+	const loginForm = getByRole('form', {name: /loginform/i});
+	expect(loginForm).toBeInTheDocument();
+	throw new Error('Finish the test!');
+});
+
+test('after logging in successfully, users are redirected to their dashboard', async () => {
+	const response = {
+		message: "Logged In"
+	}
+
+	axios.post.mockImplementationOnce(() => {
+		return Promise.resolve(response);
+	})
+
+	const testEmail = "example@example.com";
+	const testPassword = "password";
+
+	const { getByLabelText, findByText, getByRole } = render(
+		<Provider store={store}>
+			<MemoryRouter
+				initialEntries={['/login']}
+				initialIndex={1}
+			>
+				<App />
+			</MemoryRouter>
+		</Provider>
+	);
+
+	const emailInput = getByLabelText(/Email/i);
+	const passwordInput = getByLabelText('password');
+
+	fireEvent.change(emailInput, { target: { value: testEmail} })
+	fireEvent.change(passwordInput, { target: { value: testPassword } })
+
+	const signupButton = getByRole('button', /Log In/i);
+	fireEvent.click(signupButton);
+
+	expect(await findByText(response.message)).toBeInTheDocument();
+
+	const dashboard = await findByText(/Dashboard/i);
+	expect(dashboard).toBeInTheDocument();
+	throw new Error('Finish the test!');
+});
+
