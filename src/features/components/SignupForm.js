@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
+import { useHistory } from "react-router-dom";
 import { TextField, FormControl, Button } from '@material-ui/core'
 import { emailValidator } from '../../app/utils/validationHelpers'
+import { signUp } from '../../app/api/signupApi'
 
 export const SignupForm = (props) => {
+	let history = useHistory();
 
+	const [messageText, setMessageText] = useState("")
 	const [emailFieldActivated, setEmailFieldActivated] = useState(false)
 	const [passwordConfirmationActivated, setPasswordConfirmationActivated] = useState(false)
 	const [passwordsMatch, setPasswordsMatch] = useState(false)
@@ -64,12 +68,28 @@ export const SignupForm = (props) => {
 			&& passwordsMatch
 	}
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
-		console.log("Submitting the form!");
+		const payload = {
+			email,
+			password
+		}
+		
+		const response = await signUp(payload);
+		if(response instanceof Error){
+			setMessageText(response.message);
+		} else {
+			setMessageText(response.message);
+			// Redirect to dashboard page if successful.
+			setTimeout(() => {
+				history.push('/dashboard');
+			}, 1000)
+		}
 	}
 
 	return (
+		<React.Fragment>
+		<span>{messageText}</span>
 		<form aria-label="signupform" onSubmit={handleSubmit}>
 			<FormControl>
 				<TextField 
@@ -112,5 +132,6 @@ export const SignupForm = (props) => {
 				disabled={!allFieldsSubmitted()}
 			>Sign Up</Button>
 		</form>
+		</React.Fragment>
 	);
 }

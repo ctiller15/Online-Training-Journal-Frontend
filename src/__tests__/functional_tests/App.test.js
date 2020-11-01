@@ -4,6 +4,9 @@ import { Provider } from 'react-redux';
 import store from '../../app/store';
 import App from '../../App';
 import { MemoryRouter } from 'react-router-dom';
+import axios from 'axios'
+
+jest.mock('axios');
 
 test('renders Sign up and Log in links', () => {
 	const { getByRole } = render(
@@ -39,10 +42,18 @@ test('upon clicking sign up, redirects to sign up page.', () => {
 });
 
 test('after signing up successfully, users are redirected to their dashboard', async () => {
+	const response = {
+		message: "Account created successfully."
+	}
+
+	axios.post.mockImplementationOnce(() => {
+		return Promise.resolve(response);
+	})
+
 	const testEmail = "example@example.com";
 	const testPassword = "password";
 
-	const { getByLabelText, findByText } = render(
+	const { getByLabelText, findByText, getByRole } = render(
 		<Provider store={store}>
 			<MemoryRouter
 				initialEntries={['/signup']}
@@ -53,18 +64,19 @@ test('after signing up successfully, users are redirected to their dashboard', a
 		</Provider>
 	);
 
-	const emailInput = getByLabelText('Email');
-	const passwordInput = getByLabelText('Password');
-	const passwordConfirm = getByLabelText('Confirm Password');
+	const emailInput = getByLabelText(/Email/i);
+	const passwordInput = getByLabelText('password');
+	const passwordConfirm = getByLabelText(/Confirm Password/i);
 
 	fireEvent.change(emailInput, { target: { value: testEmail} })
 	fireEvent.change(passwordInput, { target: { value: testPassword } })
 	fireEvent.change(passwordConfirm, { target: {value: testPassword } });
 
-	// Wait on mock server call.
+	const signupButton = getByRole('button', /Sign Up/i);
+	fireEvent.click(signupButton);
+
+	expect(await findByText(response.message)).toBeInTheDocument();
 
 	const dashboard = await findByText(/Dashboard/i);
 	expect(dashboard).toBeInTheDocument();
-
-	throw new Error('finish the test!');
 });

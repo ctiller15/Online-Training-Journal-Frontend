@@ -22,6 +22,9 @@ function App() {
 			<Route exact path="/login">
 				<h1>Log In Form?</h1>
 			</Route>
+			<Route exact path="/dashboard">
+				<h1>Dashboard</h1>
+			</Route>
 			<Redirect to="/" />
 		</Switch>
     </div>

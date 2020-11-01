@@ -1,6 +1,10 @@
 import React from 'react';
+import axios from 'axios';
+
 import { render, fireEvent } from '@testing-library/react';
-import { SignupForm } from '../../features/components/SignupForm';
+import { SignupForm } from '../../../src/features/components/SignupForm';
+
+jest.mock('axios');
 
 test('Signup form component renders', () => {
 	const { getByRole } = render(
@@ -123,10 +127,32 @@ test('if all fields are filled in and validated, sign up button is no longer dis
 	expect(signupButton).not.toBeDisabled();
 })
 
-test('after submitting, if the email is duplicated, user is told that a user with that email already exists.', () => {
-	throw new Error('Finish the test!');
+test('after submitting, if the email is duplicated, user is told that a user with that email already exists.', async () => {
+	const errorMessage = 'A user with that email already exists';
+	
+	axios.post.mockImplementationOnce(() => {
+		return Promise.reject(new Error(errorMessage));
+	})
+
+	const email = "email@email.com"
+	const password = "password"
+
+	const { getByRole, getByLabelText, findByText } = render(
+		<SignupForm />
+	);
+
+	const emailInput = getByLabelText(/Email/i);
+	fireEvent.change(emailInput, { target: {value: email} })
+
+	const passwordInput = getByLabelText('password', {exact: true});
+	fireEvent.change(passwordInput, { target: {value: password}})
+
+	const confirmPasswordInput = getByLabelText(/Confirm Password/i);
+	fireEvent.change(confirmPasswordInput, { target: {value: password}})
+
+	const signupButton = getByRole('button', /Sign Up/i);
+	fireEvent.click(signupButton);
+	
+	expect(await findByText(errorMessage)).toBeInTheDocument();
 });
 
-test('after submitting, if a generic error occurs, user is prompted above the sign up form.', () => {
-	throw new Error('Finish the test!');
-})
