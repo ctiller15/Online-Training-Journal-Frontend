@@ -27,6 +27,22 @@ test('if email is not valid, displays validation error', () => {
 	expect(getByText(/Not a valid email address/i)).toBeInTheDocument();
 });
 
+test('form does not give email validation warning until form is used.', () => {
+	const { queryByText } = render(
+		<SignupForm />
+	);
+
+	expect(queryByText(/Please enter an email/)).toBeNull();
+})
+
+test('form does not give password validation warning until form is used.', () => {
+	const { queryByText } = render(
+		<SignupForm />
+	);
+
+	expect(queryByText(/passwords match/i)).not.toBeInTheDocument()
+})
+
 test('if passwords do match, form gives user affirmation that passwords are correct.', () => {
 	const dummyEmail = "example@example.com"
 	const passwordSubmit = "password"
@@ -39,7 +55,7 @@ test('if passwords do match, form gives user affirmation that passwords are corr
 	emailInput.focus()
 	fireEvent.change(emailInput, { target: {value: dummyEmail} })
 
-	const passwordInput = getByLabelText(/Password/i);
+	const passwordInput = getByLabelText('password', {exact: true});
 	passwordInput.focus()
 	fireEvent.change(passwordInput, { target: {value: passwordSubmit}})
 
@@ -48,15 +64,63 @@ test('if passwords do match, form gives user affirmation that passwords are corr
 	fireEvent.change(confirmPasswordInput, { target: {value: passwordSubmit }})
 
 	expect(getByText(/passwords match/i)).toBeInTheDocument();
-	throw new Error('Finish the test!');
 })
 
 test('if passwords do not match, form warns user that passwords do not match.', () => {
-	throw new Error('Finish the test!');
+	const dummyEmail = "example@example.com"
+	const passwordSubmit = "password"
+	const incorrectPasswordSubmit = "incorrectPassword"
+
+	const { getByLabelText, getByText } = render(
+		<SignupForm />
+	);
+
+	const emailInput = getByLabelText(/Email/i);
+	emailInput.focus()
+	fireEvent.change(emailInput, { target: {value: dummyEmail} })
+
+	const passwordInput = getByLabelText('password', {exact: true});
+	passwordInput.focus()
+	fireEvent.change(passwordInput, { target: {value: passwordSubmit}})
+
+	const confirmPasswordInput = getByLabelText(/Confirm Password/i);
+	confirmPasswordInput.focus()
+	fireEvent.change(confirmPasswordInput, { target: {value: incorrectPasswordSubmit }})
+
+	expect(getByText(/passwords do not match/i)).toBeInTheDocument();
+})
+
+test('sign up button is disabled by default.', () => {
+	const { getByRole } = render(
+		<SignupForm />
+	);
+
+	const signupButton = getByRole('button', /Sign Up/i);
+	expect(signupButton).toBeDisabled();
 })
 
 test('if all fields are filled in and validated, sign up button is no longer disabled.', () => {
-	throw new Error('Finish the test!');
+	const email = "email@email.com"
+	const password = "password"
+
+	const { getByRole, getByLabelText } = render(
+		<SignupForm />
+	);
+
+	const emailInput = getByLabelText(/Email/i);
+	emailInput.focus()
+	fireEvent.change(emailInput, { target: {value: email} })
+
+	const passwordInput = getByLabelText('password', {exact: true});
+	passwordInput.focus()
+	fireEvent.change(passwordInput, { target: {value: password}})
+
+	const confirmPasswordInput = getByLabelText(/Confirm Password/i);
+	confirmPasswordInput.focus()
+	fireEvent.change(confirmPasswordInput, { target: {value: password}})
+
+	const signupButton = getByRole('button', /Sign Up/i);
+	expect(signupButton).not.toBeDisabled();
 })
 
 test('after submitting, if the email is duplicated, user is told that a user with that email already exists.', () => {
