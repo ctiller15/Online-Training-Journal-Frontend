@@ -4,6 +4,8 @@ import axios from 'axios';
 import { render, fireEvent } from '@testing-library/react';
 import { LoginForm } from '../../../src/features/components/LoginForm';
 
+jest.mock('axios');
+
 test('Login form component renders', () => {
 	const { getByRole } = render(
 		<LoginForm />
@@ -11,7 +13,6 @@ test('Login form component renders', () => {
 
 	const loginForm = getByRole('form', { name: /loginform/i});
 	expect(loginForm).toBeInTheDocument();
-	throw new Error('Finish the test!');
 })
 
 test('log in button is disabled by default.', () => {
@@ -21,7 +22,6 @@ test('log in button is disabled by default.', () => {
 
 	const loginButton = getByRole('button', /Log In/i);
 	expect(loginButton).toBeDisabled();
-	throw new Error('Finish the test!');
 })
 
 test('if all fields are filled in and validated, Log In button is no longer disabled.', () => {
@@ -42,8 +42,6 @@ test('if all fields are filled in and validated, Log In button is no longer disa
 
 	const loginButton = getByRole('button', /Log In/i);
 	expect(loginButton).not.toBeDisabled();
-
-	throw new Error('Finish the test!');
 })
 
 test('after submitting, if the validation fails, user is prompted with a message that their username/password combination is incorrect.', async () => {
@@ -70,7 +68,6 @@ test('after submitting, if the validation fails, user is prompted with a message
 	fireEvent.click(signupButton);
 	
 	expect(await findByText(errorMessage)).toBeInTheDocument();
-	throw new Error('Finish the test!');
 });
 
 

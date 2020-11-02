@@ -96,7 +96,6 @@ test('upon clicking log in, redirects to login page.', () => {
 
 	const loginForm = getByRole('form', {name: /loginform/i});
 	expect(loginForm).toBeInTheDocument();
-	throw new Error('Finish the test!');
 });
 
 test('after logging in successfully, users are redirected to their dashboard', async () => {
@@ -135,6 +134,5 @@ test('after logging in successfully, users are redirected to their dashboard', a
 
 	const dashboard = await findByText(/Dashboard/i);
 	expect(dashboard).toBeInTheDocument();
-	throw new Error('Finish the test!');
 });
 

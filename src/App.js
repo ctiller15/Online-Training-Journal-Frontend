@@ -5,6 +5,7 @@ import { Link, Switch, Route, Redirect } from 'react-router-dom';
 import './App.css';
 
 import { SignupForm } from './features/components/SignupForm';
+import { LoginForm } from './features/components/LoginForm';
 
 function App() {
   return (
@@ -20,7 +21,7 @@ function App() {
 				<SignupForm />
 			</Route>
 			<Route exact path="/login">
-				<h1>Log In Form?</h1>
+				<LoginForm />
 			</Route>
 			<Route exact path="/dashboard">
 				<h1>Dashboard</h1>

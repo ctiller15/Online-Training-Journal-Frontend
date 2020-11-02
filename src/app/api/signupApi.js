@@ -14,7 +14,7 @@ export const signUp = async (payload) => {
 	return response;
 }
 
-export const logIn = async (payload) => {
+export const login = async (payload) => {
 	const url = `${process.env.REACT_APP_API_URL}/login`;
 
 	let response;
