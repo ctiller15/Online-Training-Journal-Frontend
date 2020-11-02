@@ -6,6 +6,7 @@ import './App.css';
 
 import { SignupForm } from './features/components/SignupForm';
 import { LoginForm } from './features/components/LoginForm';
+import { Dashboard } from './features/dashboard/Dashboard';
 
 function App() {
   return (
@@ -24,7 +25,7 @@ function App() {
 				<LoginForm />
 			</Route>
 			<Route exact path="/dashboard">
-				<h1>Dashboard</h1>
+				<Dashboard />
 			</Route>
 			<Redirect to="/" />
 		</Switch>
