@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, Route } from 'react-router-dom';
 import { Button } from '@material-ui/core';
 /*import {
   decrement,
@@ -14,12 +14,16 @@ import { Button } from '@material-ui/core';
 export function Dashboard() {
 	//const count = useSelector(selectCount);
   const dispatch = useDispatch();
-  const [incrementAmount, setIncrementAmount] = useState('2');
+  //const [incrementAmount, setIncrementAmount] = useState('2');
 
-  return (
+	return (
     <div>
 		<h1>Dashboard</h1>
-		<Button component={RouterLink} to="/pets/new">Add new pet</Button>
+		<Route path='/dashboard/pets/new' >
+			<h2> Add new Pet Form</h2>
+		</Route>
+
+		<Button component={RouterLink} to="/dashboard/pets/new">Add new pet</Button>
 		{/*<div className={styles.row}>
         <button
           className={styles.button}

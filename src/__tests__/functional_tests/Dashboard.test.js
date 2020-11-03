@@ -18,5 +18,15 @@ test('Page renders a button that allows the user to add a new pet.', () => {
 })
 
 test('Upon clicking the add new pet button, new pet form displays.', () => {
-	throw new Error('Finish the test!');
+	const { getByText, getByRole } = render(
+		<Provider store={store}>
+			<MemoryRouter>
+				<Dashboard />
+			</MemoryRouter>
+		</Provider>
+	);
+
+	fireEvent.click(getByRole('button', /add new pet/i));
+
+	expect(getByText(/add new pet form/i)).toBeInTheDocument()
 })

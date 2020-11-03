@@ -24,7 +24,7 @@ function App() {
 			<Route exact path="/login">
 				<LoginForm />
 			</Route>
-			<Route exact path="/dashboard">
+			<Route path="/dashboard">
 				<Dashboard />
 			</Route>
 			<Redirect to="/" />
