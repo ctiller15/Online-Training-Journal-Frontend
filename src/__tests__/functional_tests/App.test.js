@@ -34,10 +34,12 @@ test('renders Sign up and Log in links', () => {
 	expect(loginLink).toBeInTheDocument();
 });
 
-test('if user is logged in, renders dashboard and log out links', () => {
-	axios.get.mockImplementationOnce(() => Promise.resolve({authenticated: true}))
+test('if user is logged in, renders dashboard and log out links', async () => {
+	axios.get.mockImplementationOnce(() => {
+		return Promise.resolve({data: {authenticated: true}})
+	})
 
-	const { getByRole } = render(
+	const { findByRole } = render(
 		<Provider store={store}>
 			<MemoryRouter>
 				<App />
@@ -45,13 +47,11 @@ test('if user is logged in, renders dashboard and log out links', () => {
 		</Provider>
 	);
 
-	const dashboardLink = getByRole('link', {name: /dashboard/i});
-	expect(signUpLink).toBeInTheDocument();
+	const dashboardLink = await findByRole('link', {name: /dashboard/i});
+	expect(dashboardLink).toBeInTheDocument();
 
-	const logoutLink = getByRole('link', {name: /Log Out/i});
-	expect(loginLink).toBeInTheDocument();
-
-	throw new Error('Finish the test!');
+	const logoutLink = await findByRole('link', {name: /Log Out/i});
+	expect(logoutLink).toBeInTheDocument();
 })
 
 test('upon clicking sign up, redirects to sign up page.', () => {

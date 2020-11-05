@@ -1,19 +1,46 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux';
 import logo from './logo.svg';
-import { Counter } from './features/counter/Counter';
 import { Link, Switch, Route, Redirect } from 'react-router-dom';
 import './App.css';
+
+import { isAuthenticated, checkAuthentication } from './features/auth/authSlice';
 
 import { SignupForm } from './features/components/SignupForm';
 import { LoginForm } from './features/components/LoginForm';
 import { Dashboard } from './features/dashboard/Dashboard';
 
 function App() {
+	const isUserAuthenticated = useSelector(isAuthenticated);
+
+	const dispatch = useDispatch();
+
+	const userAuthLinks = () => {
+		if(isUserAuthenticated){
+			return (
+				<React.Fragment>
+					<Link to="/dashboard">Dashboard</Link>
+					<Link to="/logout">Log Out</Link>
+				</React.Fragment>
+			)
+		} else {
+			return (
+				<React.Fragment>
+					<Link to="/signup">Sign Up</Link>
+					<Link to="/login">Log In</Link>
+				</React.Fragment>
+			)
+		}
+	}
+
+	useEffect(() => {
+		dispatch(checkAuthentication())
+	}, [])
+
   return (
     <div className="App">
 		<Link to="/">Home</Link>
-		<Link to="/signup">Sign Up</Link>
-		<Link to="/login">Log In</Link>
+		{userAuthLinks()}
 		<Switch>
 			<Route exact path="/">
 				<h1>Home</h1>
