@@ -27,3 +27,17 @@ export const login = async (payload) => {
 
 	return response
 }
+
+export const checkUserAuthentication = async () => {
+	const url = `${process.env.REACT_APP_API_URL}/checkUserAuthentication`;
+
+	let response;
+
+	try {
+		response = await axios.get(url);
+	} catch (err) {
+		response = err;
+	}
+
+	return response
+}

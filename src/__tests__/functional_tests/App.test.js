@@ -1,12 +1,22 @@
+import { configureStore } from '@reduxjs/toolkit';
 import React from 'react';
 import { render, fireEvent } from '@testing-library/react';
 import { Provider } from 'react-redux';
-import store from '../../app/store';
 import App from '../../App';
 import { MemoryRouter } from 'react-router-dom';
 import axios from 'axios'
+import authReducer from '../../features/auth/authSlice'
 
 jest.mock('axios');
+let store;
+
+beforeEach(() => {
+	store = configureStore({
+		reducer: {
+			auth: authReducer
+		}
+	});
+});
 
 test('renders Sign up and Log in links', () => {
 	const { getByRole } = render(
@@ -23,6 +33,26 @@ test('renders Sign up and Log in links', () => {
 	const loginLink = getByRole('link', {name: /Log In/i});
 	expect(loginLink).toBeInTheDocument();
 });
+
+test('if user is logged in, renders dashboard and log out links', () => {
+	axios.get.mockImplementationOnce(() => Promise.resolve({authenticated: true}))
+
+	const { getByRole } = render(
+		<Provider store={store}>
+			<MemoryRouter>
+				<App />
+			</MemoryRouter>
+		</Provider>
+	);
+
+	const dashboardLink = getByRole('link', {name: /dashboard/i});
+	expect(signUpLink).toBeInTheDocument();
+
+	const logoutLink = getByRole('link', {name: /Log Out/i});
+	expect(loginLink).toBeInTheDocument();
+
+	throw new Error('Finish the test!');
+})
 
 test('upon clicking sign up, redirects to sign up page.', () => {
 	const { getByRole } = render(
