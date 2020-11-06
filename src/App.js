@@ -1,10 +1,9 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import logo from './logo.svg';
 import { Link, Switch, Route, Redirect } from 'react-router-dom';
 import './App.css';
 
-import { isAuthenticated, checkAuthentication } from './features/auth/authSlice';
+import { isAuthenticated, checkAuthentication, setAuthentication } from './features/auth/authSlice';
 
 import { SignupForm } from './features/components/SignupForm';
 import { LoginForm } from './features/components/LoginForm';
@@ -14,6 +13,8 @@ function App() {
 	const isUserAuthenticated = useSelector(isAuthenticated);
 
 	const dispatch = useDispatch();
+
+	const setAuthenticated = (bool) => dispatch(setAuthentication(bool));
 
 	const userAuthLinks = () => {
 		if(isUserAuthenticated){
@@ -49,7 +50,7 @@ function App() {
 				<SignupForm />
 			</Route>
 			<Route exact path="/login">
-				<LoginForm />
+				<LoginForm setAuthenticated={setAuthenticated}/>
 			</Route>
 			<Route path="/dashboard">
 				<Dashboard />

@@ -4,10 +4,9 @@ import { render, fireEvent } from '@testing-library/react';
 import { Provider } from 'react-redux';
 import App from '../../App';
 import { MemoryRouter } from 'react-router-dom';
-import axios from 'axios'
 import authReducer from '../../features/auth/authSlice'
+import mockAxios from 'axios'
 
-jest.mock('axios');
 let store;
 
 beforeEach(() => {
@@ -35,7 +34,7 @@ test('renders Sign up and Log in links', () => {
 });
 
 test('if user is logged in, renders dashboard and log out links', async () => {
-	axios.get.mockImplementationOnce(() => {
+	mockAxios.get.mockImplementationOnce(() => {
 		return Promise.resolve({data: {authenticated: true}})
 	})
 
@@ -76,7 +75,7 @@ test('after signing up successfully, users are redirected to their dashboard', a
 		message: "Account created successfully."
 	}
 
-	axios.post.mockImplementationOnce(() => {
+	mockAxios.post.mockImplementationOnce(() => {
 		return Promise.resolve(response);
 	})
 
@@ -133,14 +132,14 @@ test('after logging in successfully, users are redirected to their dashboard', a
 		message: "Logged In"
 	}
 
-	axios.post.mockImplementationOnce(() => {
+	mockAxios.post.mockImplementationOnce(() => {
 		return Promise.resolve(response);
 	})
 
 	const testEmail = "example@example.com";
 	const testPassword = "password";
 
-	const { getByLabelText, findByText, getByRole } = render(
+	const { getByLabelText, findByText, getByRole, findByRole } = render(
 		<Provider store={store}>
 			<MemoryRouter
 				initialEntries={['/login']}
@@ -164,5 +163,11 @@ test('after logging in successfully, users are redirected to their dashboard', a
 
 	const dashboard = await findByText(/Dashboard/i);
 	expect(dashboard).toBeInTheDocument();
+
+	const dashboardLink = await findByRole('link', {name: /dashboard/i});
+	expect(dashboardLink).toBeInTheDocument();
+
+	const logoutLink = await findByRole('link', {name: /Log Out/i});
+	expect(logoutLink).toBeInTheDocument();
 });
 

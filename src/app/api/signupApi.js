@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { instance } from './axiosConfig';
 
 export const signUp = async (payload) => {
 	const url = `${process.env.REACT_APP_API_URL}/signup`;
@@ -20,7 +21,7 @@ export const login = async (payload) => {
 	let response;
 
 	try {
-		response = await axios.post(url, payload);
+		response = await instance.post(url, payload);
 	} catch (err) {
 		response = err;
 	}
@@ -29,14 +30,14 @@ export const login = async (payload) => {
 }
 
 export const checkUserAuthentication = async () => {
-	const url = `${process.env.REACT_APP_API_URL}/checkUserAuthentication`;
+	const url = `${process.env.REACT_APP_API_URL}/user/checkAuthentication`;
 
 	let response;
 
 	try {
-		response = await axios.get(url);
+		response = await instance.get(url);
 	} catch (err) {
-		response = err;
+		response = Promise.resolve({data: {}})
 	}
 
 	return response

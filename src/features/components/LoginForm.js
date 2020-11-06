@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useHistory } from "react-router-dom";
 import { TextField, FormControl, Button, Box } from '@material-ui/core';
 import { login } from '../../app/api/signupApi'
@@ -25,6 +25,7 @@ export const LoginForm = (props) => {
 			setMessageText(response.message);
 		} else {
 			setMessageText(response.message);
+			props.setAuthenticated(true);
 			// Redirect to dashboard page if successful.
 			setTimeout(() => {
 				history.push('/dashboard');
