@@ -1,9 +1,9 @@
 import React, { useEffect } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { Link, Switch, Route, Redirect } from 'react-router-dom';
+import { Link, Switch, Route, Redirect, useHistory } from 'react-router-dom';
 import './App.css';
 
-import { isAuthenticated, checkAuthentication, setAuthentication } from './features/auth/authSlice';
+import { isAuthenticated, checkAuthentication, logUserOut, setAuthentication } from './features/auth/authSlice';
 
 import { SignupForm } from './features/components/SignupForm';
 import { LoginForm } from './features/components/LoginForm';
@@ -14,14 +14,22 @@ function App() {
 
 	const dispatch = useDispatch();
 
+	const history = useHistory();
+
 	const setAuthenticated = (bool) => dispatch(setAuthentication(bool));
+
+	const logout = async (e) => {
+		e.preventDefault()
+		dispatch(logUserOut())
+		history.push('/');
+	}
 
 	const userAuthLinks = () => {
 		if(isUserAuthenticated){
 			return (
 				<React.Fragment>
 					<Link to="/dashboard">Dashboard</Link>
-					<Link to="/logout">Log Out</Link>
+					<Link to="/" onClick={logout}>Log Out</Link>
 				</React.Fragment>
 			)
 		} else {
@@ -36,7 +44,7 @@ function App() {
 
 	useEffect(() => {
 		dispatch(checkAuthentication())
-	}, [])
+	}, [dispatch])
 
   return (
     <div className="App">

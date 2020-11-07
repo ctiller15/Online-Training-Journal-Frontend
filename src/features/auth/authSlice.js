@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { checkUserAuthentication } from '../../app/api/signupApi';
+import { checkUserAuthentication, sendLogoutRequest } from '../../app/api/signupApi';
 
 export const initialState = {
 	isAuthenticated: false,
@@ -9,6 +9,11 @@ export const initialState = {
 export const checkAuthentication = createAsyncThunk('auth/checkAuthentication', async () => {
 	const response = await checkUserAuthentication();
 	return response.data;
+});
+
+export const logUserOut = createAsyncThunk('auth/logUserOut', async () => {
+	const response = await sendLogoutRequest();
+	return response;
 });
 
 export const authSlice = createSlice({
@@ -22,6 +27,9 @@ export const authSlice = createSlice({
 	extraReducers: {
 		[checkAuthentication.fulfilled]: (state, action) => {
 			state.isAuthenticated = action.payload.authenticated
+		},
+		[logUserOut.fulfilled]: (state, action) => {
+			state.isAuthenticated = false
 		}
 	}
 });
