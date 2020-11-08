@@ -1,6 +1,6 @@
 import dashboardReducer, {
 	initialState,
-	saveNewPet
+	savePet
 } from '../../../features/dashboard/dashboardSlice';
 
 jest.mock('../../../app/api/dashboardApi');
@@ -17,10 +17,8 @@ describe('dashboardSlice', () => {
 				name: "Stanley"
 			}
 		}
-		const expectedAction = SaveNewPet.fulfilled(mockPayload);
+		const expectedAction = savePet.fulfilled(mockPayload);
 
-		expect(dashboardReducer({}, expectedAction).pets).toHaveLength(initialState.pets.length + 1);
-
-		throw new Error('Finish the test!');
+		expect(dashboardReducer(undefined, expectedAction).pets).toHaveLength(initialState.pets.length + 1);
 	})
 });

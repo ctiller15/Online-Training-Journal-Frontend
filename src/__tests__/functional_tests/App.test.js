@@ -5,6 +5,7 @@ import { Provider } from 'react-redux';
 import App from '../../App';
 import { MemoryRouter } from 'react-router-dom';
 import authReducer from '../../features/auth/authSlice'
+import dashboardReducer from '../../features/dashboard/dashboardSlice'
 import mockAxios from 'axios'
 
 let store;
@@ -12,7 +13,8 @@ let store;
 beforeEach(() => {
 	store = configureStore({
 		reducer: {
-			auth: authReducer
+			auth: authReducer,
+			dashboard: dashboardReducer,
 		}
 	});
 });
