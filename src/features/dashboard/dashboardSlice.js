@@ -1,4 +1,4 @@
-import { saveNewPet } from '../../app/api/dashboardApi';
+import { saveNewPet, getCurrentUserPets } from '../../app/api/dashboardApi';
 
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 
@@ -12,6 +12,11 @@ export const savePet = createAsyncThunk('pets/savePet', async (body) => {
 	return response.data;
 });
 
+export const getLoggedInPets = createAsyncThunk('pets/getCurrentUserPets', async () => {
+	const response = await getCurrentUserPets();
+	return response.data;
+});
+
 export const dashboardSlice = createSlice({
 	name: 'dashboard',
 	initialState,
@@ -21,7 +26,9 @@ export const dashboardSlice = createSlice({
 		[savePet.fulfilled]: (state, action) => {
 			state.pets.push(action.payload);
 		},
-
+		[getLoggedInPets.fulfilled]: (state, action) => {
+			state.pets = action.payload;
+		}
 	}
 });
 
