@@ -14,7 +14,6 @@ export const PetDetails = (props) => {
 	}
 
 	const handleUpdate = (e) => {
-		console.log("Submitting!");
 		e.preventDefault();
 		const body = {
 			id: props.id,
@@ -24,7 +23,7 @@ export const PetDetails = (props) => {
 	}
 
 	return (
-		<form>
+		<form onSubmit={handleUpdate}>
 			{
 				!editMode ? 
 					<h1>{petName}</h1>
@@ -36,8 +35,7 @@ export const PetDetails = (props) => {
 			}
 			<Button onClick={handleEditMode}>Edit</Button>
 			<Button 
-				type="submit" 
-				onSubmit={handleUpdate}>Save Changes</Button>
+				type="submit">Save Changes</Button>
 		</form>
 	)
 }

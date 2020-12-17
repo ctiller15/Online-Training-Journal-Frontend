@@ -13,3 +13,10 @@ export const saveNewPet = async (payload) => {
 	const response = await instance.post(url, payload);
 	return response;
 }
+
+export const updatePetById = async(payload) => {
+	const url = `${process.env.REACT_APP_API_URL}/user/profile/pets/${payload.id}`;
+
+	const response = await instance.put(url, payload);
+	return response;
+}

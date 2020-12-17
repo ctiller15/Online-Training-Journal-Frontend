@@ -148,7 +148,8 @@ test('After clicking a pet, displays that pet\'s information', async () => {
 
 
 test('Updating a pet updates the dashboard', async () => {
-	const names = [{name: "stanley"}, {name: "alana"}]
+	// Dev note, this only tests to the point where the reducer is sent. May need to be moved up and check the dashboard after.
+	const names = [{id: 1, name: "stanley"}, {id: 2, name: "alana"}]
 	const updatedName = "dummyName"
 
 	mockAxios.get.mockImplementationOnce(() => {
@@ -159,11 +160,11 @@ test('Updating a pet updates the dashboard', async () => {
 		return Promise.resolve({data: { name: names[0].name} });
 	})
 
-	mockAxios.post.mockImplementationOnce(() => {
-		return Promise.resolve({ data: { name: updatedName }});
+	mockAxios.put.mockImplementationOnce(() => {
+		return Promise.resolve({ data: { id: 1, name: updatedName }});
 	});
 
-	const { getByRole, getByLabelText, findAllByTestId, getByText } = render(
+	const { getByRole, getByLabelText, findAllByTestId, getByText, findByText } = render(
 		<Provider store={store}>
 			<MemoryRouter
 				initialEntries={['/dashboard']}
@@ -186,7 +187,5 @@ test('Updating a pet updates the dashboard', async () => {
 
 	fireEvent.click(getByRole('button', { name: /Save/i }));
 
-	expect(mockAxios.post).toHaveBeenCalledWith(updatedName);
-
-	throw new Error('Finish the test!');
+	expect(mockAxios.put).toHaveBeenCalledWith(`${process.env.REACT_APP_API_URL}/user/profile/pets/1`, {id: "1", name: updatedName});
 });
