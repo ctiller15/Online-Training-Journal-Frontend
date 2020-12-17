@@ -3,7 +3,8 @@ import { useSelector, useDispatch } from 'react-redux';
 import { Link as RouterLink, Route } from 'react-router-dom';
 import { Button } from '@material-ui/core';
 import { AddNewPetForm } from '../components/AddNewPetForm';
-import { petsList, savePet, getLoggedInPets } from '../dashboard/dashboardSlice';
+import { PetDetails } from '../components/PetDetails';
+import { petsList, savePet, getLoggedInPets, updatePet } from '../dashboard/dashboardSlice';
 import { Box } from '@material-ui/core';
 
 export function Dashboard() {
@@ -12,6 +13,10 @@ export function Dashboard() {
 
 	const savePets = (data) => {
 		dispatch(savePet(data))
+	}
+
+	const handleUpdate = (body) => {
+		dispatch(updatePet(body));
 	}
 
 	useEffect(() => {
@@ -27,7 +32,11 @@ export function Dashboard() {
 			/>
 		</Route>
 		<Route path='/dashboard/pets/:petid' render={(props) => {
-			return <h1>{props.location.petName}</h1>
+			return <PetDetails 
+				name={props.location.petName} 
+				id={props.match.params.petid}
+				handleUpdate={handleUpdate}
+				/>
 		}}/>
 		<Route path='/dashboard' exact>
 			<Box>

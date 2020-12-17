@@ -103,14 +103,14 @@ test('After submiting the add new pet form, a new pet displays on the dashboard'
 		</Provider>
 	);
 
-	fireEvent.click(getByRole('button', /add new pet/i));
+	fireEvent.click(getByRole('button', {name: /add new pet/i}));
 
 	const nameInput = getByLabelText(/Name/i);
 	nameInput.focus();
 
 	fireEvent.change(nameInput, { target: { value:name } });
 
-	fireEvent.click(getByRole('button', /Add new pet/i));
+	fireEvent.click(getByRole('button', {name: /Save new pet/i}));
 
 	const dashPet = await findAllByTestId('pet')
 
@@ -144,5 +144,49 @@ test('After clicking a pet, displays that pet\'s information', async () => {
 	fireEvent.click(dashPet[0]);
 
 	expect(getByText(name)).toBeInTheDocument();
-})
+});
 
+
+test('Updating a pet updates the dashboard', async () => {
+	const names = [{name: "stanley"}, {name: "alana"}]
+	const updatedName = "dummyName"
+
+	mockAxios.get.mockImplementationOnce(() => {
+		return Promise.resolve({data: names });
+	})
+
+	mockAxios.get.mockImplementationOnce(() => {
+		return Promise.resolve({data: { name: names[0].name} });
+	})
+
+	mockAxios.post.mockImplementationOnce(() => {
+		return Promise.resolve({ data: { name: updatedName }});
+	});
+
+	const { getByRole, getByLabelText, findAllByTestId, getByText } = render(
+		<Provider store={store}>
+			<MemoryRouter
+				initialEntries={['/dashboard']}
+				initialIndex={1}
+			>
+				<Dashboard />
+			</MemoryRouter>
+		</Provider>
+	);
+
+	const dashPet = await findAllByTestId('pet')
+
+	fireEvent.click(dashPet[0]);
+
+	const editButton = getByRole('button', { name: /Edit/i });
+
+	fireEvent.click(editButton);
+
+	fireEvent.change(getByRole('textbox', 'pet-name'), {target: { value: updatedName }});
+
+	fireEvent.click(getByRole('button', { name: /Save/i }));
+
+	expect(mockAxios.post).toHaveBeenCalledWith(updatedName);
+
+	throw new Error('Finish the test!');
+});

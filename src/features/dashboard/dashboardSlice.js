@@ -7,6 +7,12 @@ export const initialState = {
 	loading: 'idle',
 }
 
+export const updatePet = createAsyncThunk('pets/updatePet', async(body) => {
+	//const response = await updatePet(body);
+	//return response.data;
+	return
+});
+
 export const savePet = createAsyncThunk('pets/savePet', async (body) => {
 	const response = await saveNewPet(body);
 	return response.data;
